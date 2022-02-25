@@ -21,26 +21,26 @@ Target DLL:      Segger\JL2CM3.dll V2.99.38.0
 Dialog DLL:      TCM.DLL V1.48.0.0
  
 <h2>Project:</h2>
-D:\work\项目\电机控制\伺服控制\软件设计\motor\MDK-ARM\MOTOR.uvprojx
+D:\work\GitLab\MOTOR\motor\MDK-ARM\MOTOR.uvprojx
 Project File Date:  01/10/2022
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\keil_533\ARM\ARMCC\Bin'
 Build target 'MOTOR'
 compiling motor_control.c...
-..\Hardware\inc\hmc80x5_api.h(43): warning:  #1-D: last line of file ends without a newline
+..\Hardware\inc\hmc80x5_api.h(45): warning:  #1-D: last line of file ends without a newline
   #endif
 ..\Application\src\motor_control.c(23): warning:  #177-D: variable "limitStatus"  was declared but never referenced
   	int limitStatus = 0;
-..\Application\src\motor_control.c(148): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+..\Application\src\motor_control.c(136): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
   		Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
-..\Application\src\motor_control.c(142): warning:  #177-D: variable "code_num"  was declared but never referenced
+..\Application\src\motor_control.c(130): warning:  #177-D: variable "code_num"  was declared but never referenced
   	int code_num = 0;
-..\Application\src\motor_control.c(143): warning:  #177-D: variable "limitStatus"  was declared but never referenced
+..\Application\src\motor_control.c(131): warning:  #177-D: variable "limitStatus"  was declared but never referenced
   	int limitStatus = 0;
 ..\Application\src\motor_control.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=51588 RO-data=396 RW-data=500 ZI-data=43732  
+Program Size: Code=51908 RO-data=396 RW-data=500 ZI-data=43732  
 FromELF: creating hex file...
 ".\MOTOR\motor_con.axf" - 0 Error(s), 5 Warning(s).
 

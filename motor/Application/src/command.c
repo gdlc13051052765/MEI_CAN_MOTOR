@@ -166,6 +166,8 @@ void udp_frame_parse(void* ret_msg)
 	uint8_t ret_s = 0,i;
 	uint32_t temp;
 	int dir = 0;
+	motor_queue_t pMotorMsgSt;
+	uint8_t SyncIO;
 
 	int runPlus[6];
 	uint8_t RunDataBuf[32];
@@ -234,7 +236,6 @@ void udp_frame_parse(void* ret_msg)
 		}
 		debug_print("单电机电机测试指令 \r\n");
 		
-		
 		//MovToOrg(0,pmsg->data[1],pmsg->data[2],0,motorSpeed);//电机以最低速度持续运动
 		switch(pmsg->data[1])
 		{
@@ -251,15 +252,9 @@ void udp_frame_parse(void* ret_msg)
 				FH_ContinueMov(0,pmsg->data[1],pmsg->data[2],0,motorSpeed/2,motorSpeed,1);
 			break;
 			case 2:
-				if(pmsg->data[2] == 1)
-					dir = 0;
-				else 
-					dir =1;
-				//MovToOrg(0,pmsg->data[1],dir,0,motorSpeed);//电机以最低速度持续运动
-				FH_ContinueMov(0,pmsg->data[1],dir,0,1000,motorSpeed,1);
+				FH_ContinueMov(0,pmsg->data[1],pmsg->data[2],0,1000,motorSpeed,1);
 			break;
 		}
-		
 	} 
 	else if(pmsg->data[0] == 0xAA &pmsg->data[1] == 0xFF)
 	{//所有电机统一运行
@@ -274,24 +269,11 @@ void udp_frame_parse(void* ret_msg)
 		}
 		if(pmsg->data[2] != 0xFF)
 		{
-//			for(i=0;i<MOTOR_NUM;i++)
-//			{
-//				MovToOrg(0,i,pmsg->data[2],0,ZERO_SPEED);
-//			}
-				switch(i)
-				{
-					case 0:
-					case 1:
-					case 3:
-						MovToOrg(0,i,pmsg->data[2],0,ZERO_SPEED);
-					break;
-					case 2:
-						if(pmsg->data[2] == 1)
-							dir = 0;
-						else 
-							dir =1;
-						MovToOrg(0,i,dir,0,ZERO_SPEED);
-				}
+			for(i=0;i<MOTOR_NUM;i++)
+			{
+				MovToOrg(0,i,pmsg->data[2],0,ZERO_SPEED);
+			}
+
 		} else {//电机全部停止运动
 			for(i=0;i<MOTOR_NUM;i++)
 			{
@@ -310,6 +292,43 @@ void udp_frame_parse(void* ret_msg)
 		if(motorSpeed)
 			motorSpeed -= 100;
 		debug_print("电机减速速度 = %d \n", motorSpeed);
+	}
+	
+	//电机位置控制模式 
+	//Y轴位移长度170000脉冲
+	if(pmsg->data[0] == 0xBB)
+	{
+		switch(pmsg->data[1])//菜品标号
+		{
+			case 0://电机归位
+				for(i=0; i<MOTOR_NUM; i++)
+				{
+					Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+				}
+				DeltMov(0,0,0,1,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[0].position,0,1000,1000,0,0);//X轴电机运动距离
+				DeltMov(0,2,0,1,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[2].position,0,1000,1000,0,0);//y轴电机运动距离
+				DeltMov(0,3,0,1,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[3].position,0,1000,1000,0,0);//Z轴电机运动距离
+			break;
+			case 1:
+				debug_print("盛菜品1 动作编辑\n");
+
+				DeltMov(0,0,1,0,0,1000,LIMIT_SPEED,40000,0,1000,1000,0,0);//X轴电机运动距离
+				DeltMov(0,2,1,0,0,1000,LIMIT_SPEED,65000,0,1000,1000,0,0);//y轴电机运动距离
+				DeltMov(0,3,1,0,0,1000,LIMIT_SPEED,65000,0,1000,1000,0,0);//Z轴电机运动距离
+//				AXIS_Interpolation2(0,1,2,1,0,0,0,1000,LIMIT_SPEED,70000,70000,0,100,100,0,0);
+			break;
+			
+			case 2:
+				debug_print("盛菜品2 动作编辑\n");
+			
+			break;
+			
+			case 3:
+			break;
+			
+			case 4:
+			break;
+		}
 	}
 }
 

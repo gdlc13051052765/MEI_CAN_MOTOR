@@ -4,14 +4,14 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define	ZERO_SPEED	30000//电机回原点的速度
+#define	ZERO_SPEED	10000//电机回原点的速度
 #define MOTOR_NUM		4 //电机个数 4轴
 //pc发送运行指令的频率
 #define PLUS_RATE  20 //20ms
 //原点位置
 #define ZREO_PLUS  5000
 //极限速度
-#define LIMIT_SPEED 100000
+#define LIMIT_SPEED 30000
 
 enum {
 	stop_status = 0,//停止状态

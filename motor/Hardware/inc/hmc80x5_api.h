@@ -40,4 +40,6 @@ unsigned int   Read_Encorder(int dev,int Axs);
 int     Circular_Interpolation(int dev,unsigned int Axs1,unsigned int Axs2,unsigned char Outmod,unsigned int Vt,int xi,int yi,int xe,int ye,int foward,int continu);
 int     Circular_Reset(int dev);
 int     Circular_Busy(int dev);
+				
+	unsigned short HMC_inpw(int Device_Number,unsigned char address);
 #endif

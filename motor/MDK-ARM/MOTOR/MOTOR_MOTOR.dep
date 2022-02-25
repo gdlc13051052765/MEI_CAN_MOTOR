@@ -178,8 +178,8 @@ I (..\Application\inc\command.h)(0x60CF423A)
 I (..\Application\inc\comm_udp.h)(0x60CF2FD1)
 I (..\event_manage\inc\udp_fifo.h)(0x60CF385C)
 I (..\Application\inc\interface.h)(0x601CDC25)
-I (..\Hardware\inc\hmc80x5_api.h)(0x60B39830)
-I (..\Application\inc\motor_control.h)(0x62174B73)
+I (..\Hardware\inc\hmc80x5_api.h)(0x621885A5)
+I (..\Application\inc\motor_control.h)(0x62189C60)
 F (..\Application\src\interface.c)(0x61DD4AE2)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\interface.o --omf_browse .\motor\interface.crf --depend .\motor\interface.d)
 I (..\Application\inc\interface.h)(0x601CDC25)
 I (..\Application\inc\includes.h)(0x60CF2CAC)
@@ -238,7 +238,7 @@ I (..\Application\inc\application.h)(0x61DD4AC0)
 I (../Inc/board_info.h)(0x601A1EFA)
 I (..\iap_boot\inc\st_flash.h)(0x601A1EFA)
 I (..\iap_boot\inc\iap_struct.h)(0x601A1EFA)
-F (..\Application\src\command.c)(0x6217411C)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\command.o --omf_browse .\motor\command.crf --depend .\motor\command.d)
+F (..\Application\src\command.c)(0x62189A1D)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\command.o --omf_browse .\motor\command.crf --depend .\motor\command.d)
 I (..\Application\inc\command.h)(0x60CF423A)
 I (C:\keil_533\ARM\ARMCC\include\stdint.h)(0x5E8E2EB2)
 I (..\Application\inc\includes.h)(0x60CF2CAC)
@@ -294,10 +294,10 @@ I (..\event_manage\inc\udp_fifo.h)(0x60CF385C)
 I (..\Application\inc\interface.h)(0x601CDC25)
 I (..\Application\inc\application.h)(0x61DD4AC0)
 I (../Inc/board_info.h)(0x601A1EFA)
-I (..\Application\inc\motor_control.h)(0x62174B73)
+I (..\Application\inc\motor_control.h)(0x62189C60)
 I (..\Application\inc\udp_socket.h)(0x60E95098)
 I (..\Hardware\Ethernet\W5500\Types.h)(0x56FE0EAB)
-I (..\Hardware\inc\hmc80x5_api.h)(0x60B39830)
+I (..\Hardware\inc\hmc80x5_api.h)(0x621885A5)
 F (..\Application\src\udp_socket.c)(0x61DBFB4B)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\udp_socket.o --omf_browse .\motor\udp_socket.crf --depend .\motor\udp_socket.d)
 I (C:\keil_533\ARM\ARMCC\include\stdio.h)(0x5E8E2EB2)
 I (C:\keil_533\ARM\ARMCC\include\string.h)(0x5E8E2EB2)
@@ -340,12 +340,12 @@ I (..\event_manage\inc\udp_fifo.h)(0x60CF385C)
 I (..\Hardware\inc\can_drv.h)(0x60CF2EBA)
 I (../Inc/main.h)(0x60B33C91)
 I (..\Application\inc\command.h)(0x60CF423A)
-F (..\Application\src\motor_control.c)(0x621754FA)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\motor_control.o --omf_browse .\motor\motor_control.crf --depend .\motor\motor_control.d)
+F (..\Application\src\motor_control.c)(0x62189E21)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\motor_control.o --omf_browse .\motor\motor_control.crf --depend .\motor\motor_control.d)
 I (C:\keil_533\ARM\ARMCC\include\stdio.h)(0x5E8E2EB2)
 I (C:\keil_533\ARM\ARMCC\include\string.h)(0x5E8E2EB2)
-I (..\Application\inc\motor_control.h)(0x62174B73)
+I (..\Application\inc\motor_control.h)(0x62189C60)
 I (C:\keil_533\ARM\ARMCC\include\stdint.h)(0x5E8E2EB2)
-I (..\Hardware\inc\hmc80x5_api.h)(0x60B39830)
+I (..\Hardware\inc\hmc80x5_api.h)(0x621885A5)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x601A1EF2)
 I (../Inc/stm32f1xx_hal_conf.h)(0x60B34159)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h)(0x601A1EF2)
@@ -650,7 +650,7 @@ I (..\Hardware\Ethernet\W5500\types.h)(0x56FE0EAB)
 I (..\Hardware\Ethernet\W5500\w5500.h)(0x60B33E45)
 I (..\Hardware\Ethernet\W5500\socket.h)(0x60B33E45)
 I (..\Hardware\Ethernet\W5500\utility.h)(0x60B33E45)
-I (..\Application\inc\motor_control.h)(0x62174B73)
+I (..\Application\inc\motor_control.h)(0x62189C60)
 F (..\Hardware\src\serial.c)(0x61DD4B14)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\serial.o --omf_browse .\motor\serial.crf --depend .\motor\serial.d)
 I (..\Hardware\inc\serial.h)(0x601A1EF8)
 I (C:\keil_533\ARM\ARMCC\include\stdint.h)(0x5E8E2EB2)
@@ -843,7 +843,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x601A1EF2)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x601A1EF2)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x601A1EF2)
 I (..\event_manage\inc\crc.h)(0x601A1EFA)
-I (..\Hardware\inc\hmc80x5_api.h)(0x60B39830)
+I (..\Hardware\inc\hmc80x5_api.h)(0x621885A5)
 I (..\Application\inc\application.h)(0x61DD4AC0)
 I (../Inc/board_info.h)(0x601A1EFA)
 F (..\Hardware\Ethernet\W5500\socket.c)(0x61DD4B5E)(-c --cpu Cortex-M3 -D__MICROLIB -g -O3 --apcs=interwork -I ../Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application\inc -I ..\event_manage\inc -I ..\Hardware\inc -I ..\iap_boot\inc -I ..\uart_debug\inc -I ..\Switch -I ..\Hardware\Ethernet\W5500 --C99-I.\RTE\_MOTOR-IC:\Users\13051\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-IC:\Users\13051\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.2.0\Device\Include-D__UVISION_VERSION="533" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o .\motor\socket.o --omf_browse .\motor\socket.crf --depend .\motor\socket.d)
