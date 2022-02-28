@@ -25,12 +25,6 @@ void motor_position_zero(void)
 	
 	printf("\n 所有轴开始初始化\r\n");
 	
-	rdiv_value=HMC_inpw(0,50);
-	printf("RDIV == %d\n",rdiv_value);
-	for(i=0; i<MOTOR_NUM; i++)
-	{
-		Set_Axs(0,i,0,0,0,0);//先禁用使能
-	}
 	for(i=0; i<MOTOR_NUM; i++)
 	{
 		Set_Axs(0,i,0,0,0,0);//先禁用使能
@@ -47,31 +41,25 @@ void motor_position_zero(void)
 	{
 		Set_Encorder(0,i,3,1,0,0,1);//再启用使能，逻辑位置回0
 	}
-//	
-	
-	
+
 	//所有轴回到原点
-		pMotorMsgSt = get_motor_current_state();
+	pMotorMsgSt = get_motor_current_state();
 
-		
-		MovToOrg(0,0,1,0,ZERO_SPEED/5);
-		MovToOrg(0,1,1,0,ZERO_SPEED/2);
-		MovToOrg(0,2,1,0,ZERO_SPEED/2);//此轴运动方向跟其他轴相反，归零位时
-		MovToOrg(0,3,1,0,ZERO_SPEED/2);
+	MovToOrg(0,0,1,0,ZERO_SPEED/5);
+	MovToOrg(0,1,1,0,ZERO_SPEED/2);
+	MovToOrg(0,2,1,0,ZERO_SPEED/2);//此轴运动方向跟其他轴相反，归零位时
+	MovToOrg(0,3,1,0,ZERO_SPEED/2);
 	
-//		FL_ContinueMov(0,0,1,0,ZERO_SPEED/4,ZERO_SPEED*5);//此轴运动方向跟其他轴相反，归零位时
-//		FL_ContinueMov(0,1,1,0,ZERO_SPEED/4,ZERO_SPEED*5);
-//		FL_ContinueMov(0,2,1,0,ZERO_SPEED/4,ZERO_SPEED*5);
-//		FL_ContinueMov(0,3,1,0,ZERO_SPEED/4,ZERO_SPEED*5);
+//	FL_ContinueMov(0,0,1,0,ZERO_SPEED/4,ZERO_SPEED*5);//此轴运动方向跟其他轴相反，归零位时
+//	FL_ContinueMov(0,1,1,0,ZERO_SPEED/4,ZERO_SPEED*5);
+//	FL_ContinueMov(0,2,1,0,ZERO_SPEED/4,ZERO_SPEED*5);
+//	FL_ContinueMov(0,3,1,0,ZERO_SPEED/4,ZERO_SPEED*5);
 	
-		
-		//FL_ContinueMov(0,2,0,0,1000,2000);
-
 	//等待电机复位
 	while(1)
 	{
 		pMotorMsgSt = get_motor_current_state();
-		if((pMotorMsgSt.queue[0].Io_state == negative_limit)&(pMotorMsgSt.queue[1].Io_state == negative_limit)&(pMotorMsgSt.queue[2].Io_state == negative_limit)&(pMotorMsgSt.queue[3].Io_state == negative_limit) )
+		if((pMotorMsgSt.queue[0].Io_state == negative_limit)&(pMotorMsgSt.queue[1].Io_state == negative_limit)&(pMotorMsgSt.queue[2].Io_state == negative_limit)&(pMotorMsgSt.queue[3].Io_state == negative_limit))
 			break;
 	}
 
@@ -92,7 +80,7 @@ void motor_position_zero(void)
 //	{
 //		DeltMov(0,i,0,0,0,1000,5000,ZREO_PLUS,0,500,500,0,0);
 //	}
-	HAL_Delay(1000);
+	//HAL_Delay(1000);
 	printf("所有轴初始化完成\r\n");
 }
 

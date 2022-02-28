@@ -5,8 +5,18 @@
 #include "udp_socket.h"
 #include "hmc80x5_api.h"
 
+//定义X Y Z 轴序号
+#define  X_MOTOR 0
+#define  Y_MOTOR 2
+#define  Z_MOTOR 3
 
+//盛菜动作1 运动坐标
+#define X_COORDINATE_1   40000
+#define Y_COORDINATE_1   65000
+#define Z_COORDINATE_1   65000
 
+//减速时间
+#define DECELERATION_TIME 1000 //1000ms
 
 //
 send_queue_t	udp_queue;//udp接收队列
@@ -40,64 +50,6 @@ int32_t FourBigToSmall(uint32_t a)
 	b[3] = (unsigned char)(a>>24);
 	c = (uint32_t)(b[0]<<24) +(uint32_t)(b[1]<<16)+(uint32_t)(b[2]<<8)+ b[3];
 	return c;		
-}
-
-//16进制数组转字符串
-void HexGroupToHexString(uint8_t *data,uint8_t *dst,uint8_t len)
-{
-	uint8_t i;
-	uint8_t str[250];
-	//uchar *dst;
-	for(i=0;i<len;i++)
-	{
-		 str[2*i] = data[i]>>4;
-     str[2*i+1] = data[i]&0xf;
-	}
-	for(i=0;i<len*2;i++)
-	{
-		sprintf(&dst[i],"%X",str[i]);
-	}
-}
-//16进制字符串转16进制数组
-void HexStringToHexGroup(char* source, uint8_t* dest, int sourceLen)
-{
-    int i;  
-    uint8_t highByte, lowByte;  
-      
-    for (i = 0; i < sourceLen; i += 2)  
-    {  
-			highByte = source[i];  
-			lowByte  = source[i + 1];  
-  
-      if (highByte >= 'A' && highByte <= 'F')
-			{
-				highByte -= 0x37;
-			}
-			else if(highByte >= 'a' && highByte <= 'f')
-			{
-				highByte -= 0x57;
-			}
-			else 
-			{
-				highByte -= '0';  
-			}
-			
-			if (lowByte >= 'A' && lowByte <= 'F')
-			{
-				lowByte -= 0x37;
-			}
-			else if(lowByte >= 'a' && lowByte <= 'f')
-			{
-				lowByte -= 0x57;
-			}
-			else 
-			{
-				lowByte -= '0';  
-			}
-		
-      dest[i / 2] = (highByte << 4) | lowByte;  
-    }  
-    return ;  
 }
 
 /*==================================================================================
@@ -294,39 +246,45 @@ void udp_frame_parse(void* ret_msg)
 		debug_print("电机减速速度 = %d \n", motorSpeed);
 	}
 	
-	//电机位置控制模式 
-	//Y轴位移长度170000脉冲
+	//电机位置控制模式 电机组合动作
 	if(pmsg->data[0] == 0xBB)
 	{
 		switch(pmsg->data[1])//菜品标号
 		{
 			case 0://电机归位
+				debug_print("做完动作后电机归位\n");
 				for(i=0; i<MOTOR_NUM; i++)
 				{
 					Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
 				}
-				DeltMov(0,0,0,1,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[0].position,0,1000,1000,0,0);//X轴电机运动距离
-				DeltMov(0,2,0,1,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[2].position,0,1000,1000,0,0);//y轴电机运动距离
-				DeltMov(0,3,0,1,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[3].position,0,1000,1000,0,0);//Z轴电机运动距离
+				dir = 1;//运动方向
+//				DeltMov(0,X_MOTOR,0,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[X_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//X轴电机运动距离
+//				DeltMov(0,Y_MOTOR,0,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[Y_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//y轴电机运动距离
+//				DeltMov(0,Z_MOTOR,0,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[Z_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+				
+				AXIS_Interpolation3(0,X_MOTOR,Y_MOTOR,Z_MOTOR,0,dir,dir,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[X_MOTOR].position,pMotorMsgSt.queue[Y_MOTOR].position,pMotorMsgSt.queue[Z_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
 			break;
+				
 			case 1:
 				debug_print("盛菜品1 动作编辑\n");
-
-				DeltMov(0,0,1,0,0,1000,LIMIT_SPEED,40000,0,1000,1000,0,0);//X轴电机运动距离
-				DeltMov(0,2,1,0,0,1000,LIMIT_SPEED,65000,0,1000,1000,0,0);//y轴电机运动距离
-				DeltMov(0,3,1,0,0,1000,LIMIT_SPEED,65000,0,1000,1000,0,0);//Z轴电机运动距离
-//				AXIS_Interpolation2(0,1,2,1,0,0,0,1000,LIMIT_SPEED,70000,70000,0,100,100,0,0);
+				dir = 0;//运动方向
+//				DeltMov(0,X_MOTOR,1,dir,0,1000,LIMIT_SPEED,X_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//X轴电机运动距离
+//				DeltMov(0,Y_MOTOR,1,dir,0,1000,LIMIT_SPEED,Y_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//y轴电机运动距离
+//				DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,Z_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+				
+				AXIS_Interpolation3(0,X_MOTOR,Y_MOTOR,Z_MOTOR,0,dir,dir,dir,0,1000,LIMIT_SPEED,X_COORDINATE_1,Y_COORDINATE_1,Z_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
 			break;
 			
 			case 2:
 				debug_print("盛菜品2 动作编辑\n");
-			
 			break;
 			
 			case 3:
+				debug_print("盛菜品3 动作编辑\n");
 			break;
 			
 			case 4:
+				debug_print("盛菜品4 动作编辑\n");
 			break;
 		}
 	}

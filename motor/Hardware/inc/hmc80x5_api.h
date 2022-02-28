@@ -43,3 +43,5 @@ int     Circular_Busy(int dev);
 				
 	unsigned short HMC_inpw(int Device_Number,unsigned char address);
 #endif
+
+				

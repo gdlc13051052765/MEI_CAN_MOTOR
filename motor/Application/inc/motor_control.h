@@ -9,7 +9,7 @@
 //pc发送运行指令的频率
 #define PLUS_RATE  20 //20ms
 //原点位置
-#define ZREO_PLUS  5000
+#define ZREO_PLUS  1000
 //极限速度
 #define LIMIT_SPEED 30000
 
