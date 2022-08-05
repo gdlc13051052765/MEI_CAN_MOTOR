@@ -6,7 +6,7 @@
 #include "can_drv.h"
 
 #define UDP_MAX_CACHE_LEN			200	//UDP发送缓存
-#define MAX_CACHE_NUM						32	//最大缓存池
+#define MAX_CACHE_NUM					32	//最大缓存池
 
 typedef struct
 { 

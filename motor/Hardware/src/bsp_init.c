@@ -180,6 +180,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pins : PE2 PE3 PE4 PE5 
                            PE6 PE7 PE0 PE1 */
@@ -197,6 +198,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	
+	GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	
 
   /*Configure GPIO pins : PD0 PD1 PD2 PD3 
                            PD4 PD5 PD6 PD7 */
@@ -295,8 +304,7 @@ void w5500_init(void)
 	gpio_for_w5500_config();						/*初始化MCU相关引脚*/
   reset_w5500();                     /* W5500硬件复位 */
 	set_w5500_mac();										/*配置MAC地址*/
-	set_w5500_ip();											/*配置IP地址*/
-	
+	set_w5500_ip();											/*配置IP地址*
 	socket_buf_init(txsize, rxsize);		/*初始化8个Socket的发送接收缓存大小*/
 	
   debug_print(" W5500可以和电脑的UDP端口通讯 \n");
@@ -320,6 +328,7 @@ void bsp_init()
 	MX_USART3_UART_Init();
 	led_gpio_init();
 	w5500_init();
-	//motor_position_zero();
+	motor_position_zero();
+//	control_spoon_action(0);//开机勺子闭合
 	udp_instance_init();
 }

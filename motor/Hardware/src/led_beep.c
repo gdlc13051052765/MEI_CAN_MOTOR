@@ -91,4 +91,7 @@ void set_led_state(uint8_t type)
 void set_led_toggle(void)
 {
 	HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+	
+	HAL_GPIO_TogglePin(OPEN_RELAY_Port,OPEN_RELAY_Pin);  
+
 }

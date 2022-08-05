@@ -1,12 +1,37 @@
 
 #include <stdio.h>
 #include <string.h>
-
+#include "hwioconfig.h"
 #include "motor_control.h"
 #include "hmc80x5_api.h"
 #include "application.h"
 
 motor_queue_t motorMsgSt;//电机参数结构体
+
+
+motor_queue_t motorMsgSt;//电机参数结构体
+/*==================================================================================
+* 函 数 名： encoder_number_zero
+* 参    数： None
+* 功能描述:  hk 电机位置归零
+* 返 回 值： None
+* 备    注： 
+* 作    者： lc
+* 创建时间： 2021-05-29 170658
+==================================================================================*/
+void encoder_number_zero(void)
+{
+	int i;
+	
+	for(i=0; i<MOTOR_NUM; i++)
+	{
+		Set_Axs(0,i,0,0,0,0);//先禁用使能
+	}
+	for(i=0; i<MOTOR_NUM; i++)
+	{
+		Set_Axs(0,i,1,1,1,1);//再启用使能，逻辑位置回0
+	}
+}
 /*==================================================================================
 * 函 数 名： motor_position_zero
 * 参    数： None
@@ -22,6 +47,7 @@ void motor_position_zero(void)
 	int i;
 	int limitStatus = 0;
 	int rdiv_value = 0;
+	int ststus = -1;
 	
 	printf("\n 所有轴开始初始化\r\n");
 	
@@ -44,11 +70,12 @@ void motor_position_zero(void)
 
 	//所有轴回到原点
 	pMotorMsgSt = get_motor_current_state();
-
-	MovToOrg(0,0,1,0,ZERO_SPEED/5);
+	MovToOrg(0,3,1,0,ZERO_SPEED/4);
+	ststus = MovToOrg(0,0,1,0,ZERO_SPEED/5);
+	printf("MovToOrg 0 = %d\r\n",ststus);
 	MovToOrg(0,1,1,0,ZERO_SPEED/2);
 	MovToOrg(0,2,1,0,ZERO_SPEED/2);//此轴运动方向跟其他轴相反，归零位时
-	MovToOrg(0,3,1,0,ZERO_SPEED/2);
+	//MovToOrg(0,3,1,0,ZERO_SPEED/4);
 	
 //	FL_ContinueMov(0,0,1,0,ZERO_SPEED/4,ZERO_SPEED*5);//此轴运动方向跟其他轴相反，归零位时
 //	FL_ContinueMov(0,1,1,0,ZERO_SPEED/4,ZERO_SPEED*5);
@@ -123,6 +150,7 @@ motor_queue_t get_motor_current_state(void)
 	{
 		Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
 		debug_print("postion[%d] = %d, run_state[%d] = %d, Io_state[%d] = %d \r\n",i,pMotorMsgSt.queue[i].position, i,pMotorMsgSt.queue[i].run_state, i,pMotorMsgSt.queue[i].Io_state);
+		
 		if(pMotorMsgSt.queue[i].Io_state == negative_limit)
 		{
 			Set_Axs(0,i,0,0,0,0);
@@ -132,3 +160,23 @@ motor_queue_t get_motor_current_state(void)
 
 	return pMotorMsgSt;
 }
+/*==================================================================================
+* 函 数 名： control_spoon_action
+* 参    数： None
+* 功能描述:  控制勺子的张开闭合 1==张开；0==闭合
+* 返 回 值： None
+* 备    注： 
+* 作    者： lc
+* 创建时间： 2021-06-20 025540
+==================================================================================*/
+void control_spoon_action(int dir)
+{
+	if(!dir) {
+			HAL_GPIO_WritePin(OPEN_SPOON_Port,OPEN_SPOON_Pin,GPIO_PIN_SET);  
+			HAL_GPIO_WritePin(CLOSE_SPOON_Port,CLOSE_SPOON_Pin,GPIO_PIN_RESET);  
+	} else {
+			HAL_GPIO_WritePin(OPEN_SPOON_Port,OPEN_SPOON_Pin,GPIO_PIN_RESET); 
+			HAL_GPIO_WritePin(CLOSE_SPOON_Port,CLOSE_SPOON_Pin,GPIO_PIN_SET);
+	}
+}
+

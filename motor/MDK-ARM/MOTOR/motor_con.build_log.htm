@@ -28,31 +28,69 @@ Project File Date:  01/10/2022
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\keil_533\ARM\ARMCC\Bin'
 Build target 'MOTOR'
 compiling command.c...
-..\Hardware\inc\hmc80x5_api.h(47): warning:  #1-D: last line of file ends without a newline
+..\Hardware\inc\hmc80x5_api.h(39): warning:  #1-D: last line of file ends without a newline
   				
-..\Application\src\command.c(258): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
-  					Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
-..\Application\src\command.c(116): warning:  #177-D: variable "buffer"  was declared but never referenced
+..\Application\src\command.c(184): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  			Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(202): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  			Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(219): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  			Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(230): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  		Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(135): warning:  #177-D: variable "buffer"  was declared but never referenced
   	uint8_t buffer[8] = {0};
-..\Application\src\command.c(117): warning:  #177-D: variable "ret_id"  was declared but never referenced
+..\Application\src\command.c(136): warning:  #177-D: variable "ret_id"  was declared but never referenced
   	uint16_t ret_id = 0;
-..\Application\src\command.c(118): warning:  #177-D: variable "ret_s"  was declared but never referenced
+..\Application\src\command.c(137): warning:  #177-D: variable "ret_s"  was declared but never referenced
   	uint8_t ret_s = 0,i;
-..\Application\src\command.c(119): warning:  #177-D: variable "temp"  was declared but never referenced
-  	uint32_t temp;
-..\Application\src\command.c(124): warning:  #177-D: variable "runPlus"  was declared but never referenced
+..\Application\src\command.c(138): warning:  #177-D: variable "temp"  was declared but never referenced
+  	uint32_t temp,X_COORDINATE,Y_COORDINATE,Z_COORDINATE;
+..\Application\src\command.c(142): warning:  #177-D: variable "runPlus"  was declared but never referenced
   	int runPlus[6];
-..\Application\src\command.c(355): warning:  #940-D: missing return statement at end of non-void function "udp_pop_one_frame" 
+..\Application\src\command.c(143): warning:  #177-D: variable "RunDataBuf"  was declared but never referenced
+  	uint8_t RunDataBuf[32];
+..\Application\src\command.c(381): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  					Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(438): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(460): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(478): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(490): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  					Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(499): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(518): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(541): warning:  #167-D: argument of type "int *" is incompatible with parameter of type "unsigned int *"
+  						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+..\Application\src\command.c(263): warning:  #177-D: variable "buffer"  was declared but never referenced
+  	uint8_t buffer[8] = {0};
+..\Application\src\command.c(264): warning:  #177-D: variable "ret_id"  was declared but never referenced
+  	uint16_t ret_id = 0;
+..\Application\src\command.c(265): warning:  #177-D: variable "ret_s"  was declared but never referenced
+  	uint8_t ret_s = 0,i;
+..\Application\src\command.c(266): warning:  #177-D: variable "temp"  was declared but never referenced
+  	uint32_t temp,X_COORDINATE,Y_COORDINATE,Z_COORDINATE;
+..\Application\src\command.c(271): warning:  #177-D: variable "runPlus"  was declared but never referenced
+  	int runPlus[6];
+..\Application\src\command.c(627): warning:  #940-D: missing return statement at end of non-void function "udp_pop_one_frame" 
   }
-..\Application\src\command.c(35): warning:  #177-D: variable "motor3_run_ack_cmd"  was declared but never referenced
+..\Application\src\command.c(57): warning:  #177-D: variable "motor3_run_ack_cmd"  was declared but never referenced
   static uint8_t motor3_run_ack_cmd[] =  {0x55,0xAA,0x00,0x00,0x14,0x02};
-..\Application\src\command.c(39): warning:  #177-D: variable "motor4_run_ack_cmd"  was declared but never referenced
+..\Application\src\command.c(60): warning:  #177-D: variable "motor4_run_cmd"  was declared but never referenced
+  static uint8_t motor4_run_cmd[] =      {0x55,0xAA,0x00,0x00,0x14,0x01,0x00,0x01};
+..\Application\src\command.c(61): warning:  #177-D: variable "motor4_run_ack_cmd"  was declared but never referenced
   static uint8_t motor4_run_ack_cmd[] =  {0x55,0xAA,0x00,0x00,0x14,0x02};
-..\Application\src\command.c: 10 warnings, 0 errors
+..\Application\src\command.c(133): warning:  #177-D: function "make_rice_move_run"  was declared but never referenced
+  static void make_rice_move_run(int num)
+..\Application\src\command.c: 29 warnings, 0 errors
 linking...
-Program Size: Code=51684 RO-data=396 RW-data=500 ZI-data=43732  
+Program Size: Code=52520 RO-data=396 RW-data=476 ZI-data=43732  
 FromELF: creating hex file...
-".\MOTOR\motor_con.axf" - 0 Error(s), 10 Warning(s).
+".\MOTOR\motor_con.axf" - 0 Error(s), 29 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -75,7 +113,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

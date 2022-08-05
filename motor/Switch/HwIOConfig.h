@@ -75,6 +75,17 @@ typedef enum {
 
 	#define LED_Pin 										GPIO_PIN_12
 	#define LED_GPIO_Port 							GPIOB
+	
+	#define OPEN_SPOON_Pin 							GPIO_PIN_7
+	#define OPEN_SPOON_Port 						GPIOC
+	
+	#define CLOSE_SPOON_Pin 						GPIO_PIN_9
+	#define CLOSE_SPOON_Port 						GPIOC
+	
+	#define OPEN_RELAY_Pin 						GPIO_PIN_8
+	#define OPEN_RELAY_Port 						GPIOC
+
+
 
 
 #endif

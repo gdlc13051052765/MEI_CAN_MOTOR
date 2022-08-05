@@ -4,6 +4,7 @@
 #include "motor_control.h"
 #include "udp_socket.h"
 #include "hmc80x5_api.h"
+#include "hwioconfig.h"
 
 //定义X Y Z 轴序号
 #define  X_MOTOR 0
@@ -11,12 +12,33 @@
 #define  Z_MOTOR 3
 
 //盛菜动作1 运动坐标
-#define X_COORDINATE_1   40000
-#define Y_COORDINATE_1   65000
-#define Z_COORDINATE_1   65000
+#define X_COORDINATE_1   30000
+#define Y_COORDINATE_1   60000
+#define Z_COORDINATE_1   30000
+//盛菜动作2 运动坐标
+#define X_COORDINATE_2   30000
+#define Y_COORDINATE_2   40000
+#define Z_COORDINATE_2   30000
+//盛菜动作3 运动坐标
+#define X_COORDINATE_3   30000
+#define Y_COORDINATE_3   20000
+#define Z_COORDINATE_3   30000
+//盛菜动作4 运动坐标
+#define X_COORDINATE_4   30000
+#define Y_COORDINATE_4   1000
+#define Z_COORDINATE_4   30000
+
+//Z轴向下取菜位置
+#define Z_DOWN_TRANCE   50000
+
+//菜盆间距
+#define Y_SPACE	18000
 
 //减速时间
 #define DECELERATION_TIME 1000 //1000ms
+
+//归零误差距离
+#define CHECK_ZERO_POSTION 150
 
 //
 send_queue_t	udp_queue;//udp接收队列
@@ -99,7 +121,132 @@ static void motor_relative_time_run(void* ret_msg)
 		motor_delt_move(i,dir, pmsg->queue[i].runSpeed, plus);
 	}
 }
+/*==================================================================================
+* 函 数 名： make_rice_move_run
+* 参    数： num 菜盆位置
+* 功能描述:  取饭动作
+* 返 回 值： None
+* 备    注： 
+* 作    者： lc
+* 创建时间： 2021-06-20 025540
+==================================================================================*/
+static void make_rice_move_run(int num)
+{
+	uint8_t buffer[8] = {0};
+	uint16_t ret_id = 0;
+	uint8_t ret_s = 0,i;
+	uint32_t temp,X_COORDINATE,Y_COORDINATE,Z_COORDINATE;
+	int dir = 0;
+	motor_queue_t pMotorMsgSt;
+	uint8_t SyncIO;
+	int runPlus[6];
+	uint8_t RunDataBuf[32];
+		
+	switch(num)
+	{
+		case 1:
+			X_COORDINATE = X_COORDINATE_1;
+			Y_COORDINATE = Y_COORDINATE_1;
+			Z_COORDINATE = Z_COORDINATE_1;
+		break;
+		
+		case 2:
+			X_COORDINATE = X_COORDINATE_2;
+			Y_COORDINATE = Y_COORDINATE_2;
+			Z_COORDINATE = Z_COORDINATE_2;
+		break;
+		
+		case 3:
+			X_COORDINATE = X_COORDINATE_3;
+			Y_COORDINATE = Y_COORDINATE_3;
+			Z_COORDINATE = Z_COORDINATE_3;
+		break;
+		
+		case 4:
+			X_COORDINATE = X_COORDINATE_4;
+			Y_COORDINATE = Y_COORDINATE_4;
+			Z_COORDINATE = Z_COORDINATE_4;
+		break;
+	}
+	//所有轴先归零校准
+	motor_position_zero();
+	//第一步打开勺子
+	control_spoon_action(0); 
+	debug_print("勺子张开\n");
+	//三轴运动到菜盆位置
+	dir = 0;//运动方向
+	AXIS_Interpolation3(0,X_MOTOR,Y_MOTOR,Z_MOTOR,0,dir,dir,dir,0,1000,LIMIT_SPEED,X_COORDINATE,Y_COORDINATE, Z_COORDINATE,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
+	//等待是所有轴到达指定位置
+	while(1)
+	{
+		for(i=0; i<MOTOR_NUM; i++)
+		{
+			Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+		}
+		if(pMotorMsgSt.queue[0].position >=X_COORDINATE &&  pMotorMsgSt.queue[2].position >=Y_COORDINATE && pMotorMsgSt.queue[3].position >=Z_COORDINATE)
+		{
+			break;
+		}	
+	}
+	//HAL_Delay(4000);
+	get_motor_current_state();
+	debug_print("动作第一步完成\n");
+	//z轴向下一定距离深入到菜盆里
+	DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,Z_DOWN_TRANCE,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+	//HAL_Delay(4000);
+	//等待是所有轴到达指定位置
+	while(1)
+	{
+		for(i=0; i<MOTOR_NUM; i++)
+		{
+			Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+		}
+		if(pMotorMsgSt.queue[3].position >=Z_COORDINATE + Z_DOWN_TRANCE)
+		{
+			break;
+		}	
+	}
+	//勺子一边关闭，Z轴慢速上提
+	dir = 1;//运动方向
+	control_spoon_action(1); 
+	debug_print("勺子关闭\n");
+	DeltMov(0,Z_MOTOR,1,dir,0,100,LIMIT_SPEED/3,Z_DOWN_TRANCE,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+	//HAL_Delay(6000);
+	while(1)
+	{
+		for(i=0; i<MOTOR_NUM; i++)
+		{
+			Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+		}
+		if(pMotorMsgSt.queue[3].position <=Z_COORDINATE)
+		{
+			break;
+		}	
+	}
 
+	//X Y轴回到初始位置
+	for(i=0; i<MOTOR_NUM; i++)
+	{
+		Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+	}
+	dir = 1;//运动方向
+	AXIS_Interpolation2(0,X_MOTOR,Y_MOTOR,0,dir,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[X_MOTOR].position,pMotorMsgSt.queue[Y_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
+
+	//Z轴向下放菜
+	HAL_Delay(3000);
+	dir = 0;//运动方向
+	DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,35000,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+	HAL_Delay(3000);
+	control_spoon_action(0); 
+	debug_print("勺子张开\n");
+
+	//放完菜后，Z轴回到零位
+	HAL_Delay(3000);
+	debug_print("勺子关闭\n");
+	control_spoon_action(1); 
+	dir = 1;//运动方向
+	DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,Z_COORDINATE+35000,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+}
 /*==================================================================================
 * 函 数 名： udp_frame_parse
 * 参    数： None
@@ -116,7 +263,7 @@ void udp_frame_parse(void* ret_msg)
 	uint8_t buffer[8] = {0};
 	uint16_t ret_id = 0;
 	uint8_t ret_s = 0,i;
-	uint32_t temp;
+	uint32_t temp,X_COORDINATE,Y_COORDINATE,Z_COORDINATE;
 	int dir = 0;
 	motor_queue_t pMotorMsgSt;
 	uint8_t SyncIO;
@@ -168,64 +315,40 @@ void udp_frame_parse(void* ret_msg)
 		motorMsgSt.queue[3].tagetPosition = motorMsgSt.queue[1].tagetPosition;
 		motor_relative_time_run(&motorMsgSt);
 	}
-	//6轴电机相对时间播放
-	if(!memcmp(pmsg->data,motor4_run_cmd,8))
-	{
-	
-	}	
 	
 	//电机测试指令
 	//pmsg->data[1]运动轴；pmsg->data[2]运动方向
 	if(pmsg->data[0] == 0xAA &pmsg->data[1] != 0xFF)
 	{
-		for(i=0;i<MOTOR_NUM ;i++)
-		{
-			Set_Axs(0,i,0,0,0,0);//先禁用使能
-		}
-		for(i=0;i<MOTOR_NUM ;i++)
-		{
-			Set_Axs(0,i,1,1,1,1);//再启用使能，逻辑位置回0
-		}
-		debug_print("单电机电机测试指令 \r\n");
-		
-		//MovToOrg(0,pmsg->data[1],pmsg->data[2],0,motorSpeed);//电机以最低速度持续运动
 		switch(pmsg->data[1])
 		{
 			case 0:
 				//MovToOrg(0,pmsg->data[1],pmsg->data[2],0,motorSpeed);//电机以最低速度持续运动
 				FH_ContinueMov(0,pmsg->data[1],pmsg->data[2],0,100,motorSpeed,1);
 			break;
+			
 			case 1:
-				//MovToOrg(0,pmsg->data[1],pmsg->data[2],0,motorSpeed);//电机以最低速度持续运动
 				FH_ContinueMov(0,pmsg->data[1],pmsg->data[2],0,100,motorSpeed,1);
 			break;
-			case 3:
-				//MovToOrg(0,pmsg->data[1],pmsg->data[2],0,7000);//电机以最低速度持续运动
-				FH_ContinueMov(0,pmsg->data[1],pmsg->data[2],0,motorSpeed/2,motorSpeed,1);
-			break;
+			
 			case 2:
 				FH_ContinueMov(0,pmsg->data[1],pmsg->data[2],0,1000,motorSpeed,1);
+			break;
+			
+			case 3:
+				FH_ContinueMov(0,pmsg->data[1],pmsg->data[2],0,motorSpeed/2,motorSpeed,1);
 			break;
 		}
 	} 
 	else if(pmsg->data[0] == 0xAA &pmsg->data[1] == 0xFF)
 	{//所有电机统一运行
 		debug_print("多电机统一测试指令 \r\n");
-		for(i=0;i<MOTOR_NUM ;i++)
-		{
-			Set_Axs(0,i,0,0,0,0);//先禁用使能
-		}
-		for(i=0;i<MOTOR_NUM ;i++)
-		{
-			Set_Axs(0,i,1,1,1,1);//再启用使能，逻辑位置回0
-		}
 		if(pmsg->data[2] != 0xFF)
 		{
 			for(i=0;i<MOTOR_NUM;i++)
 			{
 				MovToOrg(0,i,pmsg->data[2],0,ZERO_SPEED);
 			}
-
 		} else {//电机全部停止运动
 			for(i=0;i<MOTOR_NUM;i++)
 			{
@@ -258,33 +381,182 @@ void udp_frame_parse(void* ret_msg)
 					Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
 				}
 				dir = 1;//运动方向
+				
 //				DeltMov(0,X_MOTOR,0,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[X_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//X轴电机运动距离
 //				DeltMov(0,Y_MOTOR,0,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[Y_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//y轴电机运动距离
 //				DeltMov(0,Z_MOTOR,0,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[Z_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
 				
 				AXIS_Interpolation3(0,X_MOTOR,Y_MOTOR,Z_MOTOR,0,dir,dir,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[X_MOTOR].position,pMotorMsgSt.queue[Y_MOTOR].position,pMotorMsgSt.queue[Z_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
-			break;
-				
+				break;
+			//菜品动作	
 			case 1:
-				debug_print("盛菜品1 动作编辑\n");
-				dir = 0;//运动方向
-//				DeltMov(0,X_MOTOR,1,dir,0,1000,LIMIT_SPEED,X_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//X轴电机运动距离
-//				DeltMov(0,Y_MOTOR,1,dir,0,1000,LIMIT_SPEED,Y_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//y轴电机运动距离
-//				DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,Z_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
-				
-				AXIS_Interpolation3(0,X_MOTOR,Y_MOTOR,Z_MOTOR,0,dir,dir,dir,0,1000,LIMIT_SPEED,X_COORDINATE_1,Y_COORDINATE_1,Z_COORDINATE_1,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
-			break;
-			
 			case 2:
-				debug_print("盛菜品2 动作编辑\n");
-			break;
-			
 			case 3:
-				debug_print("盛菜品3 动作编辑\n");
+			case 4:
+				debug_print("盛菜品 %d 动作编辑\n",pmsg->data[1]);
+				//make_rice_move_run(pmsg->data[1]);
+				//设置坐标位置
+				switch(pmsg->data[1])
+				{
+					case 1:
+						X_COORDINATE = X_COORDINATE_1;
+						Y_COORDINATE = Y_COORDINATE_1;
+						Z_COORDINATE = Z_COORDINATE_1;
+					break;
+					
+					case 2:
+						X_COORDINATE = X_COORDINATE_2;
+						Y_COORDINATE = Y_COORDINATE_2;
+						Z_COORDINATE = Z_COORDINATE_2;
+					break;
+					
+					case 3:
+						X_COORDINATE = X_COORDINATE_3;
+						Y_COORDINATE = Y_COORDINATE_3;
+						Z_COORDINATE = Z_COORDINATE_3;
+					break;
+					
+					case 4:
+						X_COORDINATE = X_COORDINATE_4;
+						Y_COORDINATE = Y_COORDINATE_4;
+						Z_COORDINATE = Z_COORDINATE_4;
+					break;
+				}
+				//所有轴先归零校准
+				motor_position_zero();
+				//第一步打开勺子
+				control_spoon_action(0); 
+				debug_print("勺子张开\n");
+				//三轴运动到菜盆位置
+				dir = 0;//运动方向
+				AXIS_Interpolation3(0,X_MOTOR,Y_MOTOR,Z_MOTOR,0,dir,dir,dir,0,1000,LIMIT_SPEED,X_COORDINATE,Y_COORDINATE, Z_COORDINATE,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
+				//等待是所有轴到达指定位置
+				while(1)
+				{
+					for(i=0; i<MOTOR_NUM; i++)
+					{
+						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+					}
+//					if(pMotorMsgSt.queue[X_MOTOR].position >=X_COORDINATE &&  pMotorMsgSt.queue[Y_MOTOR].position >=Y_COORDINATE && pMotorMsgSt.queue[Z_MOTOR].position >=Z_COORDINATE)
+//					{
+//						break;
+//					}	
+					HAL_Delay(100);
+					//判断电机是否停止运动状态
+					if((pMotorMsgSt.queue[X_MOTOR].run_state ==0) & (pMotorMsgSt.queue[Y_MOTOR].run_state == 0) & (pMotorMsgSt.queue[Z_MOTOR].run_state == 0))
+					{
+						break;
+					}	
+				}
+				//get_motor_current_state();
+				debug_print("动作第一步完成\n");
+				//z轴向下一定距离深入到菜盆里
+				DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,Z_DOWN_TRANCE,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+				//等待是所有轴到达指定位置
+				while(1)
+				{
+					for(i=0; i<MOTOR_NUM; i++)
+					{
+						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+					}
+					HAL_Delay(100);
+					if(pMotorMsgSt.queue[Z_MOTOR].run_state == 0)
+					{
+						break;
+					}
+				}
+				//勺子一边关闭，Z轴慢速上提
+				dir = 1;//运动方向
+				control_spoon_action(1); 
+				debug_print("勺子关闭\n");
+				DeltMov(0,Z_MOTOR,1,dir,0,100,LIMIT_SPEED/3,Z_DOWN_TRANCE,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+				//等待是所有轴到达指定位置
+				while(1)
+				{
+					for(i=0; i<MOTOR_NUM; i++)
+					{
+						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+					}
+					HAL_Delay(100);
+					//判断电机是否停止运动状态
+					if(pMotorMsgSt.queue[Z_MOTOR].run_state == 0)
+					{
+						break;
+					}
+				}
+				//X Y轴回到初始位置
+				for(i=0; i<MOTOR_NUM; i++)
+				{
+					Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+				}
+				dir = 1;//运动方向
+				AXIS_Interpolation2(0,X_MOTOR,Y_MOTOR,0,dir,dir,0,1000,LIMIT_SPEED,pMotorMsgSt.queue[X_MOTOR].position,pMotorMsgSt.queue[Y_MOTOR].position,0,DECELERATION_TIME,DECELERATION_TIME,0,0);
+				//等待是所有轴到达指定位置
+				while(1)
+				{
+					for(i=0; i<MOTOR_NUM; i++)
+					{
+						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+					}
+					debug_print("X Y 轴回到原点");
+					HAL_Delay(100);
+					//判断电机是否停止运动状态
+					if(((pMotorMsgSt.queue[X_MOTOR].run_state ==0) & (pMotorMsgSt.queue[Y_MOTOR].run_state == 0)))
+					{
+						break;
+					}	
+					//HAL_Delay(1000);
+				}
+				//Z轴向下放菜
+				dir = 0;//运动方向
+				DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,35000,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+				//等待是所有轴到达指定位置
+				while(1)
+				{
+					for(i=0; i<MOTOR_NUM; i++)
+					{
+						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+					}
+					HAL_Delay(100);
+					//判断电机是否停止运动状态
+					if(pMotorMsgSt.queue[Z_MOTOR].run_state == 0)
+					{
+						break;
+					}
+				}
+				control_spoon_action(0); 
+				debug_print("勺子张开\n");
+
+				//放完菜后，Z轴回到零位
+				HAL_Delay(3000);
+				debug_print("勺子关闭\n");
+				control_spoon_action(1); 
+				dir = 1;//运动方向
+				DeltMov(0,Z_MOTOR,1,dir,0,1000,LIMIT_SPEED,Z_COORDINATE+35000,0,DECELERATION_TIME,DECELERATION_TIME,0,0);//Z轴电机运动距离
+				//等待是所有轴到达指定位置
+				while(1)
+				{
+					for(i=0; i<MOTOR_NUM; i++)
+					{
+						Read_Position(0, i, &pMotorMsgSt.queue[i].position, &pMotorMsgSt.queue[i].run_state, &pMotorMsgSt.queue[i].Io_state, &SyncIO);
+					}
+					HAL_Delay(100);
+					//判断电机是否停止运动状态
+					if(pMotorMsgSt.queue[Z_MOTOR].run_state == 0)
+					{
+						break;
+					}
+				}
 			break;
 			
-			case 4:
-				debug_print("盛菜品4 动作编辑\n");
+			case 5://勺子关闭
+				control_spoon_action(0);
+				debug_print("勺子关闭\n");
+			break;
+			
+			case 6://勺子张开
+				control_spoon_action(1); 
+				debug_print("勺子张开\n");
 			break;
 		}
 	}
